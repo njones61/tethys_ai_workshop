@@ -988,6 +988,156 @@ tethys proxyapp add "Watershed Delineation Tool" "http://localhost:8501" \
 
 ---
 
+## Prompt Pair 6: Jamaica Flood Forecast Bulletin
+
+### Traditional Tethys Version
+
+```
+First, scaffold and install a new Tethys app:
+1. Run: tethys scaffold flood_bulletin /Users/njones/python_projects/tethys -d
+2. Run: cd /Users/njones/python_projects/tethys/tethysapp-flood_bulletin && tethys install -d
+
+Then build an app called "Jamaica Flood Forecast Bulletin" for the Water Resources
+Authority (WRA) of Jamaica. It should generate flood forecasting bulletins for
+river stations using the GEOGLOWS river forecast system.
+
+The pilot station is Rio Cobre at Bog Walk, St. Catherine (GEOGLOWS river ID:
+780062115). The app should work for any river by GEOGLOWS ID.
+
+Use the GEOGLOWS REST API directly (don't use the geoglows Python package). The
+base URL is https://geoglows.ecmwf.int/api and the key endpoints are:
+- /v2/forecaststats/{river_id} — ensemble forecast statistics (min, 25th, mean,
+  median, 75th, max) over a 15-day window
+- /v2/forecastensemble/{river_id} — all 52 ensemble members
+- /v2/returnperiods/{river_id} — 2, 5, 10, 25, 50, 100-yr flood thresholds
+- /v2/dailyaverages/{river_id} — climatological daily average flow
+All support ?format=csv.
+
+The app needs two pages:
+
+PAGE 1 — Station selector:
+- Map of Jamaica with a marker for Rio Cobre at Bog Walk plus a text input where
+  the user can type any GEOGLOWS river ID
+- Clicking a marker or submitting an ID goes to the bulletin page
+
+PAGE 2 — The bulletin itself:
+This should look like an official WRA advisory document (see the prototype
+bulletins from jamaica/). The bulletin contains:
+
+1. Header with "GEOGLOWS Forecasted Streamflow Bulletin", WRA branding, station
+   name, GEOGLOWS ID, forecast window dates, and issue timestamp
+
+2. An overall alert level (GREEN/YELLOW/ORANGE/RED) based on:
+   - What percentage of the 52 ensemble members exceed each return period threshold
+     (use 30% as the action threshold)
+   - Whether the median forecast exceeds any threshold
+   Color scale: GREEN = normal, YELLOW = exceeds 2-yr, ORANGE = exceeds 10-yr,
+   RED = exceeds 25-yr
+
+3. Summary stats: peak forecast, mean forecast, and the key return period
+   thresholds
+
+4. Ensemble forecast plot showing the forecast envelope (min/max shading, 25-75
+   percentile shading, mean and median lines) with return period thresholds as
+   horizontal lines
+
+5. Flood exceedance probability plot — for each time step, what % of ensembles
+   exceed each return period. Draw a dashed line at the 30% action threshold.
+
+6. Anomaly bar chart — forecast daily mean minus climatological average for each
+   day. Red bars for above normal, blue for below.
+
+7. Return period threshold table
+
+8. Footer with WRA contact info and model description
+
+Add a print button that calls window.print() so users can save bulletins as PDF.
+Cache API responses so we're not hammering GEOGLOWS on every page load.
+
+Use Plotly JS for charts. Use @controller decorators. Templates extend base.html.
+```
+
+**After the prompt completes**, restart the Tethys server:
+```bash
+tethys start
+```
+Or tell Claude: *"Restart the Tethys server."*
+Then visit `http://localhost:8000/apps/` to launch the app.
+
+### Standalone Version (Streamlit + Proxy App)
+
+```
+Build a Streamlit app called "Jamaica Flood Forecast Bulletin" for the Water
+Resources Authority (WRA) of Jamaica. It generates flood forecasting bulletins for
+river stations using the GEOGLOWS river forecast system.
+
+The pilot station is Rio Cobre at Bog Walk, St. Catherine (GEOGLOWS river ID:
+780062115). The app should work for any river by GEOGLOWS ID.
+
+Use the GEOGLOWS REST API directly (don't use the geoglows Python package). The
+base URL is https://geoglows.ecmwf.int/api and the key endpoints are:
+- /v2/forecaststats/{river_id} — ensemble forecast statistics (min, 25th, mean,
+  median, 75th, max) over a 15-day window
+- /v2/forecastensemble/{river_id} — all 52 ensemble members
+- /v2/returnperiods/{river_id} — 2, 5, 10, 25, 50, 100-yr flood thresholds
+- /v2/dailyaverages/{river_id} — climatological daily average flow
+All support ?format=csv. Cache responses with @st.cache_data.
+
+Sidebar: a selectbox with Rio Cobre at Bog Walk pre-loaded, plus a text input for
+any GEOGLOWS river ID. A "Generate Bulletin" button.
+
+Main area — the bulletin itself. This should look like an official WRA advisory
+document, not a typical Streamlit dashboard. Use custom CSS to style it. Contents:
+
+1. Header: "GEOGLOWS Forecasted Streamflow Bulletin", WRA branding, station name,
+   GEOGLOWS ID, forecast window, issue timestamp
+
+2. Overall alert banner (GREEN/YELLOW/ORANGE/RED) with colored background based on:
+   - What % of the 52 ensemble members exceed each return period threshold (30%
+     action threshold)
+   - Whether the median forecast exceeds any threshold
+   GREEN = normal, YELLOW = exceeds 2-yr, ORANGE = exceeds 10-yr, RED = exceeds
+   25-yr
+
+3. Key stats row using st.metric: peak forecast, mean forecast, main thresholds
+
+4. Ensemble forecast plot — forecast envelope (min/max shading, 25-75 percentile
+   shading, mean and median lines) with return period thresholds as horizontal
+   lines
+
+5. Flood exceedance probability plot — % of ensembles exceeding each return period
+   per time step, with a dashed 30% action threshold line
+
+6. Anomaly bar chart — forecast daily mean minus climatological average. Red bars
+   above normal, blue below.
+
+7. Return period threshold table
+
+8. Footer: WRA contact info, model description, generation timestamp
+
+Add a print button (window.print() via st.components) with print-friendly CSS so
+users can save bulletins as PDF.
+
+Use only: streamlit, streamlit-folium, folium, pandas, numpy, matplotlib or plotly,
+and requests.
+```
+
+**After building, register as a proxy app:**
+```bash
+conda activate tethys
+tethys proxyapp add "Jamaica Flood Forecast Bulletin" "http://localhost:8501" \
+  "GEOGLOWS-powered flood forecasting bulletins for Jamaican river stations" \
+  "" "flood-forecast,Jamaica,GEOGLOWS,WRA,early-warning"
+```
+
+**Or tell Claude:**
+> "Register this app as a proxy app in my Tethys Portal. It's called 'Jamaica
+> Flood Forecast Bulletin', it's running at http://localhost:8501, and it
+> generates GEOGLOWS-powered flood forecasting bulletins for Jamaican river
+> stations. Tag it with flood-forecast, Jamaica, GEOGLOWS, WRA, early-warning."
+
+---
+
 # Key References
 
 - Tethys Docs: http://docs.tethysplatform.org/
