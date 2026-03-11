@@ -415,6 +415,14 @@ base.html. Use App.render() for rendering. Handle API errors gracefully with a
 user-friendly message.
 ```
 
+**After the prompt completes**, restart the Tethys server so the portal picks up
+the changes:
+```bash
+tethys start
+```
+Or tell Claude: *"Restart the Tethys server."*
+Then visit `http://localhost:8000/apps/` to launch the app.
+
 ### Standalone Version (Streamlit + Proxy App)
 
 ```
@@ -488,6 +496,12 @@ tethys proxyapp add "Bear River Streamflow Explorer" "http://localhost:8501" \
   "" "streamflow,USGS,hydrology,Bear River"
 ```
 
+**Or tell Claude:**
+> "Register this app as a proxy app in my Tethys Portal. It's called 'Bear River
+> Streamflow Explorer', it's running at http://localhost:8501, and it's an
+> interactive USGS streamflow analysis tool for the Bear River basin. Tag it with
+> streamflow, USGS, hydrology, Bear River."
+
 ---
 
 ## Prompt Pair 2: Reservoir Storage Monitor
@@ -537,6 +551,13 @@ STEP 5 - Navigation:
 Use @controller decorators. Templates extend the app's base.html. Use
 App.render() for rendering. Handle missing data gracefully.
 ```
+
+**After the prompt completes**, restart the Tethys server:
+```bash
+tethys start
+```
+Or tell Claude: *"Restart the Tethys server."*
+Then visit `http://localhost:8000/apps/` to launch the app.
 
 ### Standalone Version (Dash + Proxy App)
 
@@ -588,6 +609,12 @@ tethys proxyapp add "Reservoir Storage Monitor" "http://localhost:8050" \
   "Track Utah reservoir storage levels with live USBR data" \
   "" "reservoirs,water-supply,Utah,USBR"
 ```
+
+**Or tell Claude:**
+> "Register this app as a proxy app in my Tethys Portal. It's called 'Reservoir
+> Storage Monitor', it's running at http://localhost:8050, and it tracks Utah
+> reservoir storage levels with live USBR data. Tag it with reservoirs,
+> water-supply, Utah, USBR."
 
 ---
 
@@ -646,6 +673,13 @@ Use Plotly JS for the charts. Use @controller decorators. Templates extend the
 app's base.html. Use App.render() for rendering. Use numpy/scipy for the
 statistical calculations (scipy.stats for the LP3 distribution).
 ```
+
+**After the prompt completes**, restart the Tethys server:
+```bash
+tethys start
+```
+Or tell Claude: *"Restart the Tethys server."*
+Then visit `http://localhost:8000/apps/` to launch the app.
 
 ### Standalone Version (Streamlit + Proxy App)
 
@@ -711,6 +745,12 @@ tethys proxyapp add "Flood Frequency Analyzer" "http://localhost:8501" \
   "" "flood-frequency,hydrology,USGS,LP3"
 ```
 
+**Or tell Claude:**
+> "Register this app as a proxy app in my Tethys Portal. It's called 'Flood
+> Frequency Analyzer', it's running at http://localhost:8501, and it does
+> Log-Pearson Type III flood frequency analysis with live USGS data. Tag it with
+> flood-frequency, hydrology, USGS, LP3."
+
 ---
 
 ## Prompt Pair 4: Water Quality Dashboard
@@ -761,6 +801,13 @@ STEP 5 - Navigation sidebar:
 Use @controller decorators. Templates extend the app's base.html. Use
 App.render() for rendering. Handle slow API responses with loading indicators.
 ```
+
+**After the prompt completes**, restart the Tethys server:
+```bash
+tethys start
+```
+Or tell Claude: *"Restart the Tethys server."*
+Then visit `http://localhost:8000/apps/` to launch the app.
 
 ### Standalone Version (Streamlit + Proxy App)
 
@@ -818,6 +865,12 @@ tethys proxyapp add "Water Quality Dashboard" "http://localhost:8501" \
   "" "water-quality,EPA,WQP,monitoring"
 ```
 
+**Or tell Claude:**
+> "Register this app as a proxy app in my Tethys Portal. It's called 'Water
+> Quality Dashboard', it's running at http://localhost:8501, and it lets users
+> explore EPA water quality monitoring data. Tag it with water-quality, EPA, WQP,
+> monitoring."
+
 ---
 
 ## Prompt Pair 5: Watershed Delineation Tool
@@ -870,6 +923,13 @@ it can take 30+ seconds). Show a loading spinner while waiting. Templates extend
 the app's base.html.
 ```
 
+**After the prompt completes**, restart the Tethys server:
+```bash
+tethys start
+```
+Or tell Claude: *"Restart the Tethys server."*
+Then visit `http://localhost:8000/apps/` to launch the app.
+
 ### Standalone Version (Streamlit + Proxy App)
 
 ```
@@ -919,6 +979,12 @@ tethys proxyapp add "Watershed Delineation Tool" "http://localhost:8501" \
   "Click a point to delineate the upstream watershed via USGS StreamStats" \
   "" "watershed,delineation,StreamStats,hydrology"
 ```
+
+**Or tell Claude:**
+> "Register this app as a proxy app in my Tethys Portal. It's called 'Watershed
+> Delineation Tool', it's running at http://localhost:8501, and it delineates
+> upstream watersheds via USGS StreamStats. Tag it with watershed, delineation,
+> StreamStats, hydrology."
 
 ---
 
