@@ -355,64 +355,58 @@ Each app idea is presented as a pair: one prompt for the **Traditional Tethys** 
 ### Traditional Tethys Version
 
 ```
-First, scaffold and install a new Tethys app:
-1. Run: tethys scaffold streamflow_explorer /Users/njones/python_projects/tethys -d
-2. Run: cd /Users/njones/python_projects/tethys/tethysapp-streamflow_explorer && tethys install -d
 
-Then build an app called "Bear River Streamflow Explorer" that displays USGS stream
-gages in the Bear River basin on a map. When the user clicks a gage, the app
-fetches real streamflow data from the USGS and displays a hydrologic analysis.
+  Build a Tethys app called "Bear River Streamflow Explorer" that displays USGS
+  stream gages in the Bear River basin on a map. When the user clicks a gage, the
+  app fetches real streamflow data from the USGS and displays a hydrologic analysis.
 
-Use the Tethys MapView gizmo for the map and Plotly JS for the plots.
+  Use the Tethys MapView gizmo for the map and Plotly JS for the plots. Use the
+  @controller decorator for routing, App.render() for rendering, and templates that
+  extend the app's base.html. Handle USGS API errors gracefully with a
+  user-friendly message.
 
-STEP 1 - Discover gages (do this at app startup or on first page load):
-- Use the USGS Water Services site service
-  (https://waterservices.usgs.gov/nwis/site/) to find all active stream gages in
-  the Bear River basin
-- Use HUC code 16010 (Bear River basin) with siteType=ST and siteStatus=active
-  and hasDataTypeCd=dv and parameterCd=00060
-- Parse the response to get station ID, name, latitude, and longitude for each gage
+  SCAFFOLD & INSTALL:
+  1. Scaffold a new Tethys app named streamflow_explorer.
+  2. Install it in development mode.
 
-STEP 2 - Map page (the app's home/index controller):
-- Use the Tethys MapView gizmo to display a map centered on the Bear River basin
-  (~41.8°N, -111.5°W)
-- Show each gage as a clickable point on the map with the station name as a popup
-- Use a clean basemap
-- When the user clicks a gage, navigate to an analysis page for that station
+  STEP 1 - Discover gages (at app startup or first page load):
+  - Use the USGS Site Service (https://waterservices.usgs.gov/nwis/site/) to find
+    active stream gages in the Bear River basin.
+  - Filter with siteType=ST, siteStatus=active, hasDataTypeCd=dv, parameterCd=00060.
+  - The Bear River basin is HUC subregion 1601. Note: the Site Service only accepts
+    2- or 8-digit HUC codes, so query its six 8-digit subbasins:
+    16010101, 16010102, 16010201, 16010202, 16010203, 16010204.
+  - Parse the response for station id, name, latitude, and longitude.
 
-STEP 3 - Station selector in the app navigation sidebar:
-- Show a dropdown or list of available stations so users can also select by name
-- Use a Tethys SelectInput gizmo if appropriate
+  STEP 2 - Map page (the app's home/index controller):
+  - MapView gizmo centered on the basin (~41.8N, -111.5W) with a clean basemap.
+  - Show each gage as a clickable point; clicking navigates to its analysis page.
 
-STEP 4 - Analysis page (a second controller, URL like
-/apps/streamflow-explorer/analysis/{station_id}/):
-- Fetch daily mean discharge (parameter 00060) for the past 3 years from the USGS
-  daily values service (https://waterservices.usgs.gov/nwis/dv/)
-- Parse the JSON response directly (don't use the dataretrieval package)
-- Do the data processing in the controller and pass results to the template
+  STEP 3 - Station selector in the navigation sidebar:
+  - A SelectInput dropdown of stations; selecting one navigates to its analysis page.
 
-STEP 5 - Create a 3-panel analysis display on the analysis page:
+  STEP 4 - Analysis page (a second controller at analysis/{station_id}/):
+  - Fetch 3 years of daily mean discharge (parameter 00060, statistic 00003) from
+    the USGS Daily Values service (https://waterservices.usgs.gov/nwis/dv/).
+  - Parse the JSON response directly (do NOT use the dataretrieval package) and
+    drop the USGS no-data sentinel (-999999). Do the processing in the controller
+    and pass results to the template.
 
-Panel 1 - Hydrograph:
-- Daily mean discharge (cfs) vs date using Plotly JS
-- 30-day rolling average as a smooth overlay line
-- Station name and ID in the title
+  STEP 5 - Three Plotly JS panels on the analysis page:
+  - Hydrograph: daily discharge (cfs) vs date, with a 30-day rolling-average
+    overlay; station name and id in the title.
+  - Flow Duration Curve: discharge (log y-axis) vs exceedance probability (0-100%),
+    with Q10/Q50/Q90 marked as labeled dashed horizontal lines.
+  - Monthly box plots (Jan-Dec) showing daily flow distributions to reveal the
+    snowmelt seasonal pattern.
+  - In Plotly titles and labels, use literal Unicode characters (e.g. an em dash),
+    not HTML entities like &mdash;.
 
-Panel 2 - Flow Duration Curve:
-- Discharge (y-axis, log scale) vs exceedance probability (x-axis, 0-100%)
-- Mark and label Q10, Q50, and Q90 with horizontal dashed lines
+  STEP 6 - Summary statistics below the plots, in a Tethys TableView gizmo:
+  period of record, mean/median/min/max discharge, and Q10/Q50/Q90.
 
-Panel 3 - Monthly Box Plots:
-- Box-and-whisker plots showing daily flow distributions by calendar month
-  (Jan-Dec) to show the snowmelt seasonal pattern
-
-STEP 6 - Summary statistics:
-- Below the plots, display a summary table using a Tethys TableView gizmo or a
-  simple HTML table: period of record, mean/median/min/max discharge, Q10/Q50/Q90
-
-Use the @controller decorator for routing. Templates should extend the app's
-base.html. Use App.render() for rendering. Handle API errors gracefully with a
-user-friendly message.
+  As you build, create each file with the editor so the steps are visible, and
+  briefly explain what each file does.
 ```
 
 **After the prompt completes**, restart the Tethys server so the portal picks up
