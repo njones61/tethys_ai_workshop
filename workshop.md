@@ -1,4 +1,4 @@
-# Vibe Coding Tethys Apps with Claude
+# Building Tethys Apps using AI Coding Agents
 
 A guide for building web apps with AI assistance and integrating them with a Tethys Portal.
 
@@ -65,7 +65,7 @@ The critical contract: as long as these files exist with the right structure, Te
 
 ## Step 1: Scaffold and Install an App
 
-Before vibe coding, you need a scaffolded app installed in dev mode.
+Before coding with an AI agent, you need a scaffolded app installed in dev mode.
 
 **CLI commands:**
 ```bash
@@ -87,7 +87,7 @@ appear in the portal at `http://localhost:8000/apps/`.
 `__init__.py` in the parent) and the `pyproject.toml` entry points are easy to
 get wrong. The scaffold gets this right in seconds.
 
-## Step 2: Vibe Code the App
+## Step 2: Build the App with an AI Agent
 
 With the skeleton installed and the dev server running, iterate conversationally
 with Claude. Just describe what you want and Claude modifies the generated files.
@@ -103,7 +103,7 @@ with Claude. Just describe what you want and Claude modifies the generated files
 - **Use `App.render()`** instead of Django's `render()` for proper context injection
 - **Template blocks**: `app_content`, `app_navigation_items`, `app_actions`, `scripts`, `styles`
 
-### Example vibe coding session
+### Example AI coding session
 
 ```
 You: "Add a page that shows a Leaflet map where users can click to add points"
@@ -169,7 +169,7 @@ A Proxy App is a link registered in the Tethys Portal that points to an external
 
 This is how you'd integrate something like [AquiferX](https://github.com/njones61/aquiferx) (a React/Vite SPA) with a Tethys Portal.
 
-## Step 1: Vibe Code the Standalone App
+## Step 1: Build the Standalone App with an AI Agent
 
 Build your app with whatever framework you want. There are no Tethys conventions
 to follow — it's a completely independent web application.
@@ -180,7 +180,7 @@ to follow — it's a completely independent web application.
 
 Or start from an existing app like AquiferX.
 
-### Good frameworks for vibe coding
+### Good frameworks for AI-assisted coding
 
 | Framework | Good for | Launch command |
 |-----------|----------|----------------|
@@ -308,14 +308,14 @@ For a workshop setting, **"no app auth"** is the simplest — Tethys controls vi
 ## Session 2: Traditional Tethys App (~30 min)
 - Scaffold a new app with `tethys scaffold`
 - Install in dev mode with `tethys install -d`
-- Vibe code with Claude:
+- Build with an AI coding agent:
   - "Add a Leaflet map to the home page"
   - "Add a form to submit data"
   - "Show the submitted data in a table"
 - See results live in the portal
 
 ## Session 3: Standalone + Proxy App (~45 min)
-- Vibe code a standalone app from scratch (e.g., React, Streamlit, or Dash)
+- Build a standalone app from scratch with an AI agent (e.g., React, Streamlit, or Dash)
 - Or clone an existing app (e.g., AquiferX)
 - Run it on a separate port
 - Register it as a Proxy App in Tethys
@@ -339,7 +339,7 @@ For a workshop setting, **"no app auth"** is the simplest — Tethys controls vi
 | **UI** | Tethys templates, header, nav sidebar | Completely custom |
 | **Authentication** | Built-in (Django auth) | Must handle separately |
 | **Portal integration** | Deep (same URL space, shared DB) | Shallow (link in app library) |
-| **Vibe coding freedom** | Must follow Tethys conventions | No constraints |
+| **AI coding freedom** | Must follow Tethys conventions | No constraints |
 | **Best for** | Apps that need tight portal integration | Existing apps, complex UIs, non-Python apps |
 
 ---
