@@ -70,13 +70,13 @@ Before coding with an AI agent, you need a scaffolded app installed in dev mode.
 **CLI commands:**
 ```bash
 conda activate tethys
-tethys scaffold <app_name> /path/to/your/projects -d
-cd /path/to/your/projects/tethysapp-<app_name>
+tethys scaffold <app_name> ~/python_projects/tethys -d
+cd ~/python_projects/tethys/tethysapp-<app_name>
 tethys install -d
 ```
 
 **Or tell Claude:**
-> "Scaffold a new Tethys app called 'my_app' in /path/to/your/projects and
+> "Scaffold a new Tethys app called 'my_app' in ~/python_projects/tethys and
 > install it in dev mode."
 
 The scaffold creates the boilerplate package structure. The `-d` flag on install
@@ -348,6 +348,10 @@ For a workshop setting, **"no app auth"** is the simplest — Tethys controls vi
 
 Each app idea is presented as a pair: one prompt for the **Traditional Tethys** approach and one for the **Standalone + Proxy App** approach. These are complete, copy-pasteable prompts to give directly to Claude.
 
+Every prompt ends with a **PARALLELIZE** instruction telling Claude to use subagents and run independent work concurrently. This speeds up the build considerably — Claude can fetch data for multiple stations, build separate pages/controllers, and create independent files all at the same time instead of one step at a time.
+
+> **Note:** The scaffold/install steps put apps in `~/python_projects/tethys` (`~` is your home directory, so this works as-is for everyone). If you'd rather use a different location, edit that path in the prompt — or just tell Claude where your projects live.
+
 ---
 
 ## Prompt Pair 1: Bear River Streamflow Explorer
@@ -407,6 +411,11 @@ Each app idea is presented as a pair: one prompt for the **Traditional Tethys** 
 
   As you build, create each file with the editor so the steps are visible, and
   briefly explain what each file does.
+
+  PARALLELIZE: Use subagents and do as much work in parallel as possible. Run
+  independent tasks concurrently — e.g., query the six 8-digit HUC subbasins at
+  the same time, and build the map page, station selector, and analysis page in
+  parallel — instead of sequentially.
 ```
 
 **After the prompt completes**, restart the Tethys server so the portal picks up
@@ -480,6 +489,11 @@ Formatting:
 
 Use only standard packages: streamlit, streamlit-folium, folium, numpy, pandas,
 matplotlib, and requests.
+
+PARALLELIZE: Use subagents and do as much work in parallel as possible. Run
+independent tasks concurrently — e.g., discover gages and fetch their daily data
+concurrently, and build the map, station selector, and analysis components in
+parallel — instead of sequentially.
 ```
 
 **After building, register as a proxy app:**
@@ -504,8 +518,8 @@ tethys proxyapp add "Bear River Streamflow Explorer" "http://localhost:8501" \
 
 ```
 First, scaffold and install a new Tethys app:
-1. Run: tethys scaffold reservoir_monitor /Users/njones/python_projects/tethys -d
-2. Run: cd /Users/njones/python_projects/tethys/tethysapp-reservoir_monitor && tethys install -d
+1. Run: tethys scaffold reservoir_monitor ~/python_projects/tethys -d
+2. Run: cd ~/python_projects/tethys/tethysapp-reservoir_monitor && tethys install -d
 
 Then build an app called "Reservoir Storage Monitor" that tracks reservoir storage
 levels for major reservoirs in Utah using data from the US Bureau of Reclamation.
@@ -544,6 +558,11 @@ STEP 5 - Navigation:
 
 Use @controller decorators. Templates extend the app's base.html. Use
 App.render() for rendering. Handle missing data gracefully.
+
+PARALLELIZE: Use subagents and do as much work in parallel as possible. Run
+independent tasks concurrently — e.g., fetch data for all five reservoirs at the
+same time, and build the map, dashboard, and detail controllers in parallel —
+instead of sequentially.
 ```
 
 **After the prompt completes**, restart the Tethys server:
@@ -594,6 +613,11 @@ STEP 5 - Styling:
 
 Use only: dash, dash-bootstrap-components, plotly, pandas, numpy, and requests.
 Run the app on port 8050.
+
+PARALLELIZE: Use subagents and do as much work in parallel as possible. Run
+independent tasks concurrently — e.g., fetch data for all five reservoirs at the
+same time, and build the map, dashboard table, and detail charts in parallel —
+instead of sequentially.
 ```
 
 **After building, register as a proxy app:**
@@ -618,8 +642,8 @@ tethys proxyapp add "Reservoir Storage Monitor" "http://localhost:8050" \
 
 ```
 First, scaffold and install a new Tethys app:
-1. Run: tethys scaffold flood_frequency /Users/njones/python_projects/tethys -d
-2. Run: cd /Users/njones/python_projects/tethys/tethysapp-flood_frequency && tethys install -d
+1. Run: tethys scaffold flood_frequency ~/python_projects/tethys -d
+2. Run: cd ~/python_projects/tethys/tethysapp-flood_frequency && tethys install -d
 
 Then build an app called "Flood Frequency Analyzer" that performs Log-Pearson Type III
 flood frequency analysis on USGS annual peak streamflow data for any gage in the
@@ -666,6 +690,11 @@ STEP 4 - Results page (second controller):
 Use Plotly JS for the charts. Use @controller decorators. Templates extend the
 app's base.html. Use App.render() for rendering. Use numpy/scipy for the
 statistical calculations (scipy.stats for the LP3 distribution).
+
+PARALLELIZE: Use subagents and do as much work in parallel as possible. Run
+independent tasks concurrently — e.g., build the station search page and the
+results page in parallel, and fetch/parse data concurrently where possible —
+instead of sequentially.
 ```
 
 **After the prompt completes**, restart the Tethys server:
@@ -729,6 +758,11 @@ STEP 5 - Additional features:
 
 Use only: streamlit, streamlit-folium, folium, numpy, scipy, pandas, matplotlib,
 and requests.
+
+PARALLELIZE: Use subagents and do as much work in parallel as possible. Run
+independent tasks concurrently — e.g., build the search controls, the
+analysis/plotting code, and the LP3 statistics module in parallel, and fetch
+data concurrently where possible — instead of sequentially.
 ```
 
 **After building, register as a proxy app:**
@@ -753,8 +787,8 @@ tethys proxyapp add "Flood Frequency Analyzer" "http://localhost:8501" \
 
 ```
 First, scaffold and install a new Tethys app:
-1. Run: tethys scaffold water_quality /Users/njones/python_projects/tethys -d
-2. Run: cd /Users/njones/python_projects/tethys/tethysapp-water_quality && tethys install -d
+1. Run: tethys scaffold water_quality ~/python_projects/tethys -d
+2. Run: cd ~/python_projects/tethys/tethysapp-water_quality && tethys install -d
 
 Then build an app called "Water Quality Dashboard" that lets users explore water
 quality monitoring data from the EPA's Water Quality Portal (WQP).
@@ -794,6 +828,11 @@ STEP 5 - Navigation sidebar:
 
 Use @controller decorators. Templates extend the app's base.html. Use
 App.render() for rendering. Handle slow API responses with loading indicators.
+
+PARALLELIZE: Use subagents and do as much work in parallel as possible. Run
+independent tasks concurrently — e.g., build the search, results map, and
+station detail controllers in parallel, and fetch station/result data
+concurrently — instead of sequentially.
 ```
 
 **After the prompt completes**, restart the Tethys server:
@@ -849,6 +888,11 @@ STEP 5 - Export:
 
 Use only: streamlit, streamlit-folium, folium, pandas, numpy, matplotlib, plotly,
 and requests.
+
+PARALLELIZE: Use subagents and do as much work in parallel as possible. Run
+independent tasks concurrently — e.g., build the search controls, map display,
+and station analysis components in parallel, and query stations and results
+concurrently — instead of sequentially.
 ```
 
 **After building, register as a proxy app:**
@@ -873,8 +917,8 @@ tethys proxyapp add "Water Quality Dashboard" "http://localhost:8501" \
 
 ```
 First, scaffold and install a new Tethys app:
-1. Run: tethys scaffold watershed_tool /Users/njones/python_projects/tethys -d
-2. Run: cd /Users/njones/python_projects/tethys/tethysapp-watershed_tool && tethys install -d
+1. Run: tethys scaffold watershed_tool ~/python_projects/tethys -d
+2. Run: cd ~/python_projects/tethys/tethysapp-watershed_tool && tethys install -d
 
 Then build an app called "Watershed Delineation Tool" that lets users click a point on
 a map and delineates the upstream watershed using the USGS StreamStats API or the
@@ -915,6 +959,11 @@ STEP 5 - Flow statistics (if available):
 Use @controller decorators with AJAX endpoints for the delineation request (since
 it can take 30+ seconds). Show a loading spinner while waiting. Templates extend
 the app's base.html.
+
+PARALLELIZE: Use subagents and do as much work in parallel as possible. Run
+independent tasks concurrently — e.g., build the map page, the AJAX delineation
+endpoint, and the basin-characteristics/flow-statistics panels in parallel —
+instead of sequentially.
 ```
 
 **After the prompt completes**, restart the Tethys server:
@@ -964,6 +1013,11 @@ Handle errors gracefully — StreamStats doesn't cover all locations and can be
 slow. Show friendly messages for unsupported areas or timeouts.
 
 Use only: streamlit, streamlit-folium, folium, pandas, numpy, requests, and json.
+
+PARALLELIZE: Use subagents and do as much work in parallel as possible. Run
+independent tasks concurrently — e.g., build the map interface, the StreamStats
+delineation/parsing logic, and the results/export components in parallel —
+instead of sequentially.
 ```
 
 **After building, register as a proxy app:**
@@ -988,8 +1042,8 @@ tethys proxyapp add "Watershed Delineation Tool" "http://localhost:8501" \
 
 ```
 First, scaffold and install a new Tethys app:
-1. Run: tethys scaffold flood_bulletin /Users/njones/python_projects/tethys -d
-2. Run: cd /Users/njones/python_projects/tethys/tethysapp-flood_bulletin && tethys install -d
+1. Run: tethys scaffold flood_bulletin ~/python_projects/tethys -d
+2. Run: cd ~/python_projects/tethys/tethysapp-flood_bulletin && tethys install -d
 
 Then build an app called "Jamaica Flood Forecast Bulletin" for the Water Resources
 Authority (WRA) of Jamaica. It should generate flood forecasting bulletins for
@@ -1049,6 +1103,12 @@ Add a print button that calls window.print() so users can save bulletins as PDF.
 Cache API responses so we're not hammering GEOGLOWS on every page load.
 
 Use Plotly JS for charts. Use @controller decorators. Templates extend base.html.
+
+PARALLELIZE: Use subagents and do as much work in parallel as possible. Run
+independent tasks concurrently — e.g., fetch the four GEOGLOWS endpoints
+(forecaststats, forecastensemble, returnperiods, dailyaverages) at the same
+time, and build the station selector page and the bulletin page (with its
+plots) in parallel — instead of sequentially.
 ```
 
 **After the prompt completes**, restart the Tethys server:
@@ -1114,6 +1174,12 @@ users can save bulletins as PDF.
 
 Use only: streamlit, streamlit-folium, folium, pandas, numpy, matplotlib or plotly,
 and requests.
+
+PARALLELIZE: Use subagents and do as much work in parallel as possible. Run
+independent tasks concurrently — e.g., fetch the four GEOGLOWS endpoints
+(forecaststats, forecastensemble, returnperiods, dailyaverages) at the same
+time, and build the alert logic, the plots, and the bulletin layout/CSS in
+parallel — instead of sequentially.
 ```
 
 **After building, register as a proxy app:**
